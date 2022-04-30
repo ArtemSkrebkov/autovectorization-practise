@@ -5,6 +5,7 @@ jobs:
     windows:
         runs-on: windows-latest
         strategy:
+            fail-fast: false
             matrix:
                 clang-version: [11, 12, 13, latest]
         steps:
@@ -17,7 +18,7 @@ jobs:
                   platform: x64
             - name: Run test
               run: |
-                  clang -O3 -fno-vectorize -fno-unroll-loops -I./loops/vectorizable/ -DINCLUDE_TEST=test1.hpp test.cpp -emit-llvm -c -o test1.bc
+                  clang -O3 -fno-vectorize -fno-unroll-loops -I./loops/vectorizable/ -DINCLUDE_TEST="test1.hpp" test.cpp -emit-llvm -c -o test1.bc
                   llvm-extract -func=?run@testFunc@@QEAAXXZ test1.bc -o run-fn.bc
                   llvm-dis run-fn.bc -o run-fn.ll
     ubuntu:
@@ -35,6 +36,6 @@ jobs:
                   platform: x64
             - name: Run test
               run: |
-                  clang -O3 -fno-vectorize -fno-unroll-loops -I./loops/vectorizable/ -DINCLUDE_TEST=test1.hpp test.cpp -emit-llvm -c -o test1.bc
+                  clang -O3 -fno-vectorize -fno-unroll-loops -I./loops/vectorizable/ -DINCLUDE_TEST="test1.hpp" test.cpp -emit-llvm -c -o test1.bc
                   llvm-extract -func=_ZN8testFunc3runEv test1.bc -o run-fn.bc
                   llvm-dis run-fn.bc -o run-fn.ll
